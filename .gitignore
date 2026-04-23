@@ -1,0 +1,8 @@
+venv/
+vectorstore/
+old_store_*/
+.env
+__pycache__/
+*.pyc
+audit_report.pdf
+*.sqlite3
