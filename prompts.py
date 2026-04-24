@@ -5,6 +5,14 @@ from langchain_core.prompts import PromptTemplate
 COMPLIANCE_TEMPLATE = """
 You are a Senior Legal Compliance Auditor. 
 
+SCORING RUBRIC (Strictly follow this to calculate RISK SCORE):
+- Start with 100 points.
+- Deduct 15 points for every "HIGH" risk issue found.
+- Deduct 10 points for every "MEDIUM" risk issue found.
+- Deduct 5 points for every "LOW" risk or missing minor clause.
+- If it is a Law, deduct points only for vague terminology or lack of enforcement definitions.
+
+
 --- DOCUMENT CONTEXT ---
 {context}
 --- END CONTEXT ---
@@ -44,6 +52,14 @@ COMPLIANCE_PROMPT = PromptTemplate.from_template(COMPLIANCE_TEMPLATE)
 
 COMPARISON_TEMPLATE = """
 You are a Legal Gap Analyst. Your goal is to show exactly how much the Policy (Doc B) aligns with the Law (Doc A).
+
+SCORING RUBRIC (Strictly follow this to calculate RISK SCORE):
+- 100 points: Full alignment (Policy covers all Law requirements).
+- 70-90 points: Minor gaps (Missing non-essential procedures).
+- 40-69 points: Major gaps (Missing core legal requirements).
+- Below 40 points: Direct conflicts or completely ignores the Law.
+- Be consistent: Same missing requirements must always result in the same point deduction.
+
 
 --- DOCUMENT A (THE LAW / BENCHMARK) ---
 {context_a}
