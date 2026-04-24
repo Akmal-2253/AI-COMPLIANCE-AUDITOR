@@ -40,8 +40,8 @@ def compare_policies(query: str) -> tuple:
     vs_b = load_vectorstore("collection_b")
 
     # Dynamic k for each doc separately
-    total_a = vs_a._collection.count()
-    total_b = vs_b._collection.count()
+    total_a = vs_a._index.ntotal()
+    total_b = vs_b._index.ntotal()
     k_a = min(15, max(5, total_a // 3))
     k_b = min(15, max(5, total_b // 3))
     print(f"⚖️ Doc A: {total_a} chunks → k={k_a} | Doc B: {total_b} chunks → k={k_b}")
