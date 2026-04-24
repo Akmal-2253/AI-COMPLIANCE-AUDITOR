@@ -7,7 +7,10 @@ import random
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 
-CHROMA_PATH = os.path.join(tempfile.gettempdir(), "vectorstore")
+import uuid
+# This creates a unique folder every time the app restarts
+CHROMA_PATH = os.path.join(tempfile.gettempdir(), f"vectorstore_{uuid.uuid4().hex}")
+
 
 # Remove @st.cache_resource — just use a global variable instead
 _embeddings = None
