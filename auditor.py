@@ -12,7 +12,11 @@ def run_audit(query: str, collection_name: str = "compliance_docs") -> str:
     print(f"🔍 Single Audit: {total_docs} chunks → retrieving k={k}")
     
     retriever = vectorstore.as_retriever(search_kwargs={"k": k})
-    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+    llm = ChatGroq(
+    model="llama-3.3-70b-versatile",
+    temperature=0,
+    groq_api_key=os.getenv("GROQ_API_KEY")
+)
 
     def format_docs(docs):
         pages = set()

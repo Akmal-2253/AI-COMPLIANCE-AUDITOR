@@ -2,11 +2,12 @@
 import os
 import shutil
 import gc
+import tempfile
 import random
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 
-CHROMA_PATH = "vectorstore"
+CHROMA_PATH = os.path.join(tempfile.gettempdir(), "vectorstore")
 
 # Remove @st.cache_resource — just use a global variable instead
 _embeddings = None

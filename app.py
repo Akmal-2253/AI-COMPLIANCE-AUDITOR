@@ -1,17 +1,29 @@
-#main.py
+#app.py
 import streamlit as st
 import tempfile
 import os
 import re
-from dotenv import load_dotenv
 from report_gen import create_pdf_report  
 from loader import load_document_with_fitz
 from embedder import embed_documents, clear_vectorstore 
 from auditor import run_audit
 
-load_dotenv()
+import os
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except:
+    pass
 
 st.set_page_config(page_title="Global AI Compliance Auditor", layout="wide", page_icon="🛡️")
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+if not GROQ_API_KEY:
+    st.error("❌ GROQ API Key not found. Set it in Hugging Face Secrets.")
+    st.stop()
+
 
 st.markdown("""
     <style>
@@ -218,3 +230,16 @@ elif st.session_state.audit_mode == "compare":
                 finally:
                     if path_a and os.path.exists(path_a): os.unlink(path_a)
                     if path_b and os.path.exists(path_b): os.unlink(path_b)
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
