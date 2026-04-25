@@ -100,7 +100,7 @@ st.write("---")
 
 # ── SINGLE AUDIT MODE ──────────────────────────────────
 if st.session_state.audit_mode == "single":
-    st.subheader("🔍 Single Policy Analysis")
+    st.subheader(" Single Policy Analysis")
     uploaded_file = st.file_uploader("Upload Policy (PDF)", type="pdf")
 
     if uploaded_file:
