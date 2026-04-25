@@ -7,3 +7,5 @@ faiss-cpu
 sentence-transformers
 pymupdf
 tiktoken
+fpdf2
+
