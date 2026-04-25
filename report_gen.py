@@ -43,6 +43,14 @@ def add_disclaimer(pdf):
     pdf.multi_cell(0, 5, disclaimer_text, border=1, align='C', fill=True)
 
 
+def clean_text_for_pdf(text):
+    # Remove null bytes explicitly
+    text = text.replace('\x00', '')
+    # Keep only tab, newline, carriage return, and printable ASCII (0x20-0x7E)
+    text = re.sub(r'[^\x09\x0A\x0D\x20-\x7E]', '', text)
+    return text
+
+
 def create_pdf_report(report_text):
     pdf = FPDF(orientation='P', unit='mm', format='A4')
     pdf.set_auto_page_break(auto=True, margin=15)
@@ -55,8 +63,8 @@ def create_pdf_report(report_text):
     pdf.line(10, 25, 200, 25)
     pdf.ln(10)
 
-    # 2. Body Text Cleaning (Latin-1 compatibility)
-    clean_text = re.sub(r'[^\x00-\x7f]', r'', report_text)
+    # 2. Clean text thoroughly (null bytes + non-printable chars)
+    clean_text = clean_text_for_pdf(report_text)
 
     # 3. Body Text Processing
     for line in clean_text.split('\n'):
