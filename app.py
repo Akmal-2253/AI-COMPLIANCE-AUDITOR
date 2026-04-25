@@ -142,18 +142,16 @@ if st.session_state.audit_mode == "single":
                         st.text_area("", result, height=500)
                     with res_col2:
                         st.markdown("### 📥 Export")
-                        pdf_file = create_pdf_report(result)
-                        with open(pdf_file, "rb") as f:
-                            # Generate the bytes directly
-pdf_bytes = create_pdf_report(result)
+                       
+                        pdf_bytes = create_pdf_report(result)
 
 # Use pdf_bytes instead of 'f'
-st.download_button(
-    label="⬇️ Download PDF Report", 
-    data=pdf_bytes, 
-    file_name="Audit_Report.pdf", 
-    mime="application/pdf",
-    use_container_width=True
+                        st.download_button(
+                          label="⬇️ Download PDF Report", 
+                          data=pdf_bytes, 
+                          file_name="Audit_Report.pdf", 
+                          mime="application/pdf",
+                          use_container_width=True
 )
 
 
