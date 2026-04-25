@@ -27,6 +27,7 @@ def add_glossary_page(pdf):
         pdf.ln(2)
 
 def add_disclaimer(pdf):
+    # Ensure disclaimer stays on the current page or adds a small gap
     pdf.ln(10)
     pdf.set_fill_color(245, 245, 245)  
     pdf.set_font("Arial", 'I', 9)
@@ -41,6 +42,7 @@ def add_disclaimer(pdf):
     pdf.multi_cell(0, 5, disclaimer_text, border=1, align='C', fill=True)
 
 def create_pdf_report(report_text):
+    # Standard A4 Setup
     pdf = FPDF(orientation='P', unit='mm', format='A4')
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
@@ -61,13 +63,15 @@ def create_pdf_report(report_text):
             pdf.ln(3)
             continue
             
-        if any(h in line.upper() for h in [":", "STEP", "RISK"]):
+        # Dynamic Bold for Headers
+        if any(h in line.upper() for h in [":", "STEP", "RISK", "PERCENTAGE", "SUMMARY"]):
             pdf.set_font("Arial", 'B', 11)
             pdf.set_text_color(0, 0, 100) 
         else:
             pdf.set_font("Arial", '', 11)
             pdf.set_text_color(0, 0, 0) 
             
+        # multi_cell(0) ensures text wraps within margins
         pdf.multi_cell(0, 7, txt=line, align='L')
         pdf.ln(1)
 
@@ -75,6 +79,5 @@ def create_pdf_report(report_text):
     add_glossary_page(pdf)
     add_disclaimer(pdf)
             
-    report_path = "audit_report.pdf"
-    pdf.output(report_path)
-    return report_path
+    # CRITICAL: Return the raw bytes directly to prevent old file caching
+    return pdf.output(dest='S')
