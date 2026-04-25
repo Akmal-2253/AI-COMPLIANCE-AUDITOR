@@ -5,15 +5,23 @@ from embedder import load_vectorstore, embed_documents
 from loader import load_document_with_fitz
 from prompts import COMPARISON_PROMPT
 
+
+def sanitize(text: str) -> str:
+    """Remove null bytes and non-printable characters."""
+    text = text.replace('\x00', '')
+    text = re.sub(r'[^\x09\x0A\x0D\x20-\x7E]', '', text)
+    return text
+
+
 def load_and_embed_two_docs(path_a: str, path_b: str):
     print("📄 Embedding Doc A...")
     chunks_a = load_document_with_fitz(path_a)
     embed_documents(chunks_a, collection_name="collection_a")
-
     print("📄 Embedding Doc B...")
     chunks_b = load_document_with_fitz(path_b)
     embed_documents(chunks_b, collection_name="collection_b")
     print("✅ Both docs embedded.")
+
 
 def extract_risk_score(report: str) -> dict:
     score = 50
@@ -35,11 +43,11 @@ def extract_risk_score(report: str) -> dict:
         "bar": "█" * (score // 10) + "░" * (10 - score // 10)
     }
 
+
 def compare_policies(query: str) -> tuple:
     vs_a = load_vectorstore("collection_a")
     vs_b = load_vectorstore("collection_b")
 
-    # Dynamic k for each doc separately
     total_a = len(vs_a.index_to_docstore_id)
     total_b = len(vs_b.index_to_docstore_id)
     k_a = min(15, max(5, total_a // 3))
@@ -49,19 +57,22 @@ def compare_policies(query: str) -> tuple:
     docs_a = vs_a.as_retriever(search_kwargs={"k": k_a}).invoke(query)
     docs_b = vs_b.as_retriever(search_kwargs={"k": k_b}).invoke(query)
 
-    context_a = "\n\n".join([d.page_content for d in docs_a])
-    context_b = "\n\n".join([d.page_content for d in docs_b])
+    context_a = "\n\n".join([sanitize(d.page_content) for d in docs_a])
+    context_b = "\n\n".join([sanitize(d.page_content) for d in docs_b])
 
-    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+    llm = ChatGroq(
+        model="llama-3.3-70b-versatile",
+        temperature=0,
+        groq_api_key=os.getenv("GROQ_API_KEY")
+    )
 
     prompt_text = COMPARISON_PROMPT.format(
         context_a=context_a,
         context_b=context_b,
         question=query
     )
-
     response = llm.invoke(prompt_text)
-    report = str(response.content)
-    risk = extract_risk_score(report)
 
+    report = sanitize(str(response.content))
+    risk = extract_risk_score(report)
     return report, risk
