@@ -142,18 +142,14 @@ if st.session_state.audit_mode == "single":
                         st.text_area("", result, height=500)
                     with res_col2:
                         st.markdown("### 📥 Export")
-                       
                         pdf_bytes = create_pdf_report(result)
-
-# Use pdf_bytes instead of 'f'
                         st.download_button(
-                          label="⬇️ Download PDF Report", 
-                          data=pdf_bytes, 
-                          file_name="Audit_Report.pdf", 
-                          mime="application/pdf",
-                          use_container_width=True
-)
-
+                            label="⬇️ Download PDF Report",
+                            data=pdf_bytes,
+                            file_name="Audit_Report.pdf",
+                            mime="application/pdf",
+                            use_container_width=True
+                        )
 
                 except Exception as e:
                     st.error(f"❌ Error: {e}")
@@ -178,7 +174,7 @@ elif st.session_state.audit_mode == "compare":
         if st.button("🚀 Start Comparative Analysis", use_container_width=True):
             with st.spinner("⚖️ Comparing documents and calculating legal gaps..."):
                 clear_vectorstore()
-                path_a, path_b = None, None  # define before try
+                path_a, path_b = None, None
 
                 try:
                     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as t1, \
@@ -229,27 +225,18 @@ elif st.session_state.audit_mode == "compare":
                     with det_col1:
                         st.markdown("#### 📋 Detailed AI Analysis")
                         st.text_area("", result, height=500)
-                                      with det_col2:
+                    with det_col2:
                         st.markdown("#### 📄 Actions")
-                        # Get bytes directly and pass to the button
-                        st.download_button("⬇️ Download Full PDF", create_pdf_report(result), file_name="Comparison_Report.pdf", mime="application/pdf", use_container_width=True)
-
+                        st.download_button(
+                            "⬇️ Download Full PDF",
+                            create_pdf_report(result),
+                            file_name="Comparison_Report.pdf",
+                            mime="application/pdf",
+                            use_container_width=True
+                        )
 
                 except Exception as e:
                     st.error(f"❌ Error: {e}")
                 finally:
                     if path_a and os.path.exists(path_a): os.unlink(path_a)
                     if path_b and os.path.exists(path_b): os.unlink(path_b)
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
