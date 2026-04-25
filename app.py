@@ -144,7 +144,18 @@ if st.session_state.audit_mode == "single":
                         st.markdown("### 📥 Export")
                         pdf_file = create_pdf_report(result)
                         with open(pdf_file, "rb") as f:
-                            st.download_button("⬇️ Download PDF Report", f, file_name="Audit_Report.pdf", use_container_width=True)
+                            # Generate the bytes directly
+pdf_bytes = create_pdf_report(result)
+
+# Use pdf_bytes instead of 'f'
+st.download_button(
+    label="⬇️ Download PDF Report", 
+    data=pdf_bytes, 
+    file_name="Audit_Report.pdf", 
+    mime="application/pdf",
+    use_container_width=True
+)
+
 
                 except Exception as e:
                     st.error(f"❌ Error: {e}")
@@ -220,11 +231,11 @@ elif st.session_state.audit_mode == "compare":
                     with det_col1:
                         st.markdown("#### 📋 Detailed AI Analysis")
                         st.text_area("", result, height=500)
-                    with det_col2:
+                                      with det_col2:
                         st.markdown("#### 📄 Actions")
-                        pdf_file = create_pdf_report(result)
-                        with open(pdf_file, "rb") as f:
-                            st.download_button("⬇️ Download Full PDF", f, file_name="Comparison_Report.pdf", use_container_width=True)
+                        # Get bytes directly and pass to the button
+                        st.download_button("⬇️ Download Full PDF", create_pdf_report(result), file_name="Comparison_Report.pdf", mime="application/pdf", use_container_width=True)
+
 
                 except Exception as e:
                     st.error(f"❌ Error: {e}")
