@@ -30,7 +30,7 @@ def run_audit(query: str, collection_name: str = "compliance_docs") -> str:
             pages.add(str(d.metadata.get("page", "?")))
         return "\n\n".join(texts), pages
 
-    # The rest remains the same
+   
     docs = retriever.invoke(query)
     context, pages = format_docs(docs)
 
